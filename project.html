@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YEN - 말싸움 시뮬레이션 AI</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#e9d5ff,#fbcfe8,#bfdbfe);
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.page{
+display:none;
+width:100%;
+max-width:520px;
+}
+
+.page.active{
+display:block;
+}
+
+.card{
+background:white;
+padding:35px;
+border-radius:30px;
+box-shadow:0 15px 35px rgba(0,0,0,.15);
+}
+
+.logo{
+text-align:center;
+margin-bottom:20px;
+}
+
+.logo img{
+width:200px;
+}
+
+.title{
+text-align:center;
+color:#9333ea;
+font-size:32px;
+margin-bottom:10px;
+}
+
+.desc{
+text-align:center;
+color:#666;
+margin-bottom:25px;
+}
+
+input{
+width:100%;
+padding:14px;
+border:2px solid #ddd;
+border-radius:12px;
+margin-bottom:15px;
+font-size:15px;
+}
+
+button{
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+margin-top:10px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+color:white;
+}
+
+.loginBtn{
+background:#9333ea;
+}
+
+.signupBtn{
+background:#ec4899;
+}
+
+.startBtn{
+background:#9333ea;
+}
+
+.passBtn{
+background:#f59e0b;
+}
+
+.backBtn{
+background:#666;
+}
+
+.tone{
+    padding:14px;
+    border:2px solid #ddd;
+    border-radius:12px;
+    background:white;
+    color:#333;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:bold;
+}
+
+.tone.active{
+background:#9333ea;
+color:white;
+border-color:#9333ea;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin:20px 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- 로그인 -->
+
+<div class="page active" id="login">
+
+<div class="card">
+
+<div class="logo">
+<img src="logo.jpg">
+</div>
+
+<h1 class="title">YEN</h1>
+
+<p class="desc">말싸움 시뮬레이션 AI</p>
+
+<input type="text" placeholder="아이디">
+
+<input type="password" placeholder="비밀번호">
+
+<button
+class="loginBtn"
+onclick="showPage('home')">
+
+로그인
+
+</button>
+
+<button
+class="signupBtn"
+onclick="showPage('signup')">
+
+회원가입
+
+</button>
+
+</div>
+
+</div>
+
+<!-- 회원가입 -->
+
+<div class="page" id="signup">
+
+<div class="card">
+
+<div class="logo">
+<img src="logo.jpg">
+</div>
+
+<h1 class="title">회원가입</h1>
+
+<p class="desc">YEN 회원가입</p>
+
+<input type="text" placeholder="아이디">
+
+<input type="password" placeholder="비밀번호">
+
+<input type="password" placeholder="비밀번호 확인">
+
+<input type="email" placeholder="이메일">
+
+<button
+class="loginBtn"
+onclick="showPage('login')">
+
+가입하기
+
+</button>
+
+<button
+class="backBtn"
+onclick="showPage('login')">
+
+로그인으로 돌아가기
+
+</button>
+
+</div>
+
+</div>
+<!-- 홈 화면 -->
+
+<div class="page" id="home">
+
+<div class="card">
+
+<div class="logo">
+<img src="logo.jpg">
+</div>
+
+<h1 class="title">말싸움 시뮬레이션 AI</h1>
+
+<p class="desc">
+주제를 입력하면 AI가 말싸움을 시뮬레이션합니다.
+</p>
+
+<input
+id="topic"
+type="text"
+placeholder="예 : 치킨 vs 피자">
+
+<p style="font-weight:bold; margin-bottom:10px; color:#333; font-size:16px;">
+시뮬레이션 스타일
+</p>
+
+<div class="grid">
+
+<button
+class="tone active"
+onclick="selectTone(this,'논리적')">
+🧠 논리적
+</button>
+
+<button
+class="tone"
+onclick="selectTone(this,'감성적')">
+❤️ 감성적
+</button>
+
+<button
+class="tone"
+onclick="selectTone(this,'냉정한')">
+❄️ 냉정한
+</button>
+
+<button
+class="tone"
+onclick="selectTone(this,'유머러스')">
+😄 유머러스
+</button>
+
+</div>
+
+<button
+class="startBtn"
+onclick="startSimulation()">
+시뮬레이션 시작
+</button>
+
+<button
+class="passBtn"
+onclick="showPage('pass')">
+👑 yen pass 시작하기
+</button>
+
+<button
+class="backBtn"
+onclick="showPage('login')">
+로그아웃
+</button>
+
+</div>
+
+</div>
+
+<!-- 채팅 화면 -->
+
+<div class="page" id="chat">
+
+<div class="card">
+
+<h1 class="title">💬 말싸움 시뮬레이션</h1>
+
+<p
+id="chatInfo"
+style="
+background:#f3e8ff;
+padding:12px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;">
+</p>
+
+<div style="
+background:#eee;
+padding:12px;
+border-radius:12px;
+margin-bottom:10px;
+width:75%;">
+상대방 : 치킨이 최고지.
+</div>
+
+<div style="
+background:#9333ea;
+color:white;
+padding:12px;
+border-radius:12px;
+margin-left:auto;
+margin-bottom:10px;
+width:75%;">
+AI : 꼭 그렇지만은 않아. 피자도 충분히 맛있어.
+</div>
+
+<div style="
+background:#eee;
+padding:12px;
+border-radius:12px;
+margin-bottom:10px;
+width:75%;">
+상대방 : 그래도 치킨은 못 참지.
+</div>
+
+<div style="
+background:#9333ea;
+color:white;
+padding:12px;
+border-radius:12px;
+margin-left:auto;
+margin-bottom:20px;
+width:75%;">
+AI : 사람마다 취향이 다르니까 피자를 좋아하는 사람도 많아.
+</div>
+
+<button
+class="backBtn"
+onclick="showPage('home')">
+메인으로 돌아가기
+</button>
+
+</div>
+
+</div>
+
+<!-- yen pass -->
+
+<div class="page" id="pass">
+
+<div class="card">
+
+<div class="logo">
+<img src="logo.jpg">
+</div>
+
+<h1 class="title">👑 yen pass</h1>
+
+<p class="desc">
+더 많은 기능을 이용해 보세요.
+</p>
+
+<div style="border:2px solid #ddd;padding:20px;border-radius:15px;margin-bottom:15px;">
+<h3>🥈 yen pass 1</h3>
+<ul style="padding-left:20px;line-height:2;">
+<li>내용 길이 2배 확장</li>
+<li>광고 2번에 한 개로 축소</li>
+</ul>
+</div>
+
+<div style="border:2px solid #ddd;padding:20px;border-radius:15px;margin-bottom:20px;">
+<h3>🥇 yen pass 2</h3>
+<ul style="padding-left:20px;line-height:2;">
+<li>내용 길이 3배 확장</li>
+<li>광고 제거</li>
+</ul>
+</div>
+
+<button class="startBtn">
+구독하기
+</button>
+
+<button
+class="backBtn"
+onclick="showPage('home')">
+나중에 하기
+</button>
+
+</div>
+
+</div>
+<script>
+
+let selectedTone = "논리적";
+
+function showPage(pageId){
+
+    const pages = document.querySelectorAll(".page");
+
+    pages.forEach(function(page){
+        page.classList.remove("active");
+    });
+
+    document.getElementById(pageId).classList.add("active");
+}
+
+function selectTone(button,tone){
+
+    const buttons = document.querySelectorAll(".tone");
+
+    buttons.forEach(function(btn){
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    selectedTone = tone;
+}
+
+function startSimulation(){
+
+    const topic =
+        document.getElementById("topic").value || "주제 없음";
+
+    document.getElementById("chatInfo").innerHTML =
+        "<b>주제 :</b> " + topic +
+        "<br><b>스타일 :</b> " + selectedTone;
+
+    showPage("chat");
+}
+
+</script>
+
+</body>
+</html>
